@@ -1,0 +1,55 @@
+{
+    "amp": -1,
+    "env_base_seed": 0,
+    "max_len": 20,
+    "same_nb_ops_per_batch": false,
+    "export_data": true,
+    "reload_data": "",
+    "reload_size": -1,
+    "env_name": "char_sp",
+    "operators": "add:10,mul:10,sub:5,div:5,sqrt:4,pow2:4,pow3:2,pow4:1,pow5:1,ln:4,exp:4,sin:4,cos:4,tan:4,asin:1",
+    "id2word": {
+        "4": "x_1", "5": "x_2", "6": "x_3", "7": "abs", "8": "acos", "9": "add", "10": "asin", "11": "atan", "12": "cos", "13": "cosh", "14": "coth", "15": "div", "16": "exp", "17": "ln", "18": "mul", "19": "pow", "20": "sin", "21": "sinh", "22": "sqrt", "23": "tan", "24": "tanh", "25": "-3", "26": "-2", "27": "-1", "28": "0", "29": "1", "30": "2", "31": "3", "32": "4", "33": "5", "1": "S", "2": "F", "3": "c"
+    },
+    "word2id": {
+        "x_1": 4, "x_2": 5, "x_3": 6, "abs": 7, "acos": 8, "add": 9, "asin": 10, "atan": 11, "cos": 12, "cosh": 13, "coth": 14, "div": 15, "exp": 16, "ln": 17, "mul": 18, "pow": 19, "sin": 20, "sinh": 21, "sqrt": 22, "tan": 23, "tanh": 24, "-3": 25, "-2": 26, "-1": 27, "0": 28, "1": 29, "2": 30, "3": 31, "4": 32, "5": 33, "P": 0, "S": 1, "F": 2, "c": 3
+    },
+    "una_ops": [
+        "asin", "cos", "exp", "ln", "pow2", "pow3", "pow4", "pow5", "sin", "sqrt", "tan"
+    ],
+    "bin_ops": [
+        "asin", "cos", "exp", "ln", "pow2", "pow3", "pow4", "pow5", "sin", "sqrt", "tan"
+    ],
+    "max_ops": 5,
+    "max_ops_G": 4,
+    "max_int": 1,
+    "int_base": 10,
+    "balanced": false,
+    "precision": 10,
+    "positive": false,
+    "rewrite_functions": "",
+    "leaf_probs": "0.8,0,0.2,0",
+    "n_variables": 3,
+    "n_coefficients": 0,
+    "clean_prefix_expr": true,
+    "tasks": "prim_fwd",
+    "beam_eval": false,
+    "beam_size": 1,
+    "beam_length_penalty": 1,
+    "beam_early_stopping": true,
+    "eval_only": false,
+    "eval_verbose": 0,
+    "eval_verbose_print": false,
+    "debug": false,
+    "local_rank": 0,
+    "n_nodes": 1,
+    "node_id": 0,
+    "global_rank": 0,
+    "world_size": 1,
+    "is_master": true,
+    "n_words": 91,
+    "eos_index": 1,
+    "pad_index": 0,
+    "export_path_prefix": "./dumped/first_exp/5lxzpmvyke/data.prefix",
+    "export_path_infix": "./dumped/first_exp/5lxzpmvyke/data.infix"
+}
