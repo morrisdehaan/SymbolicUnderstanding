@@ -99,7 +99,7 @@ def generate_function(vars: list[str], identity_prob=0.5, nest_prob=0.3, max_dep
 
         return func, [var]
     
-def generate_simple_equation(vars: list[str], op_prob=0.9, decay=0.7, max_len=6) -> Tuple[str, list[str]]:
+def generate_simple_equation(vars: list[str], op_prob=1, decay=0.90, max_len=20) -> Tuple[str, list[str]]:
     """
     Generates an equation consisting only of addition, subtraction, multiplication and division.
     """

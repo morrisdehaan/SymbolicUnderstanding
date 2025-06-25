@@ -1,7 +1,7 @@
 from nesymres.architectures.model import Model
 from nesymres.dclasses import FitParams, BFGSParams
 from nesymres.architectures.data import de_tokenize
-from nesymres.dataset.generator import Generator
+from nesymres.dataset.generator import Generator, InvalidPrefixExpression
 from functools import partial
 import torch
 import torch.nn.functional as F
@@ -57,7 +57,7 @@ def load_model(
     )
 
     # load model
-    model = Model.load_from_checkpoint(checkpoint_path, cfg=model_cfg.architecture).to(device)
+    model = Model.load_from_checkpoint(checkpoint_path, map_location=device, cfg=model_cfg.architecture)
     model.eval()
 
     fitfunc = partial(model.fitfunc, cfg_params=params_fit)
@@ -85,7 +85,7 @@ def greedy_predict(
 
     # Returns
     A tuple containing:
-    * `next_token`: The predicted token IDs for each sample in the batch.
+    * `token_probs`: The token probabilities.
     * `sequence`: The sequence of tokens generated so far, which is updated with the predicted token.
     * `enc_embed`: The encoder embedding, which may be resued.
     """
@@ -132,12 +132,11 @@ def greedy_predict(
     output = output.permute(1, 0, 2).contiguous()
 
     # add next token
-    # NOTE: softmax not really necessary here, but may come in handy later
     token_probs = F.softmax(output[:, -1:, :], dim=-1).squeeze(1)
     next_token = torch.argmax(token_probs, dim=-1)
     sequence[:, cur_len] = next_token
 
-    return next_token, sequence, enc_embed
+    return token_probs, sequence, enc_embed
 
 def tokens_to_text(tokens: torch.Tensor, params: FitParams) -> list[str]:
     """
@@ -149,15 +148,25 @@ def tokens_to_text(tokens: torch.Tensor, params: FitParams) -> list[str]:
 
     equations = []
     for seq in tokens:
-        raw = de_tokenize(seq[1:].tolist(), params.id2word)
+        raw = []
+        for i in seq.tolist()[1:]:
+            # stop at invalid or EOS token
+            if i == 0 or params.id2word[i] == "F":
+                break
+            else:
+                raw.append(params.id2word[i])
 
-        pretty_eq = sympy.sympify(
-            Generator.prefix_to_infix(
-                raw, 
-                coefficients=["constant"], 
-                variables=params.total_variables
-            ).replace("{constant}", f"c",1)
-        )
-        equations.append(str(pretty_eq))
+        try:
+            pretty_eq = sympy.sympify(
+                Generator.prefix_to_infix(
+                    raw, 
+                    coefficients=["constant"], 
+                    variables=params.total_variables
+                ).replace("{constant}", f"c",1)
+            )
+            equations.append(str(pretty_eq))
+        except InvalidPrefixExpression:
+            # if the expression is invalid, just return the concatenation of words
+            equations.append(" ".join(raw))
 
     return equations
